@@ -15,6 +15,9 @@ project "UrbanEngine"
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
+    pchheader "urbanpch.h"
+    pchsource "%{prj.name}/src/urbanpch.cpp"
+
     files {
         "%{prj.name}/src/**.cpp",
         "%{prj.name}/src/**.c",
@@ -64,11 +67,14 @@ project "TestApp"
     }
 
     filter "configurations:Debug"
+        defines "URBAN_DEBUG"
         symbols "On"
     filter "configurations:Release"
+        defines "URBAN_RELEASE"
         optimize "On"
 
     filter "system:windows"
         cppdialect "C++17"
         staticruntime "On"
         systemversion "latest"
+        defines "URBAN_PLATFORM_WINDOWS"

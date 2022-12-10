@@ -1,7 +1,7 @@
-#include <Greeter.h>
+#include <UrbanEngine/Application/EntryPoint.h>
+#include "TestApp.h"
 
-int main(int argc, char** argv)
+UrbanEngine::App* UrbanEngine::CreateApplication()
 {
-	Urban::Greeter::Greetings();
-	return 0;
+	return new TestApp();
 }

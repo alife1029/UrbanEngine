@@ -2,7 +2,7 @@
 *.sln
 *.vcxproj
 *.vcxproj.user
-*.filter
+*.vcxproj.filters
 .vs/
 
 # Output Files
