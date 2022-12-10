@@ -1,0 +1,10 @@
+# Visual Studio Files and Directories
+*.sln
+*.vcxproj
+*.vcxproj.user
+*.filter
+.vs/
+
+# Output Files
+bin/
+bin-int/
