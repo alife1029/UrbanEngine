@@ -21,5 +21,6 @@ void TestApp::Start()
 void TestApp::Update()
 {
 	std::cout << "TestApp::Update()" << std::endl;
+	throw UrbanEngine::UrbanExceptionUnicode(__LINE__, __FILEW__);
 	UrbanEngine::AppManager::QuitApplication();
 }
