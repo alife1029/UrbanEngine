@@ -15,20 +15,19 @@ extern UrbanEngine::App* UrbanEngine::CreateApplication();
 int main(int argc, char** argv)
 #elif defined(URBAN_RELEASE)
 #pragma comment(linker, "/SUBSYSTEM:WINDOWS")
-int WinMain(	HINSTANCE hInstance,
-				HINSTANCE hPrevInstance,
-				LPWSTR lpCmdLine,
-				int nShowCmd	)
+int WINAPI WinMain(	HINSTANCE hInstance,
+					HINSTANCE hPrevInstance,
+					LPSTR lpCmdLine,
+					int nShowCmd	)
 #endif // URBAN_DEBUG
 {
 	try
 	{
 		UrbanEngine::App* app = UrbanEngine::CreateApplication();
 		UrbanEngine::AppManager::RunApplication(app);
-		UrbanEngine::AppManager::QuitApplication();
 		delete app;
 
-		return 0;
+		return UrbanEngine::AppManager::GetReturnValue();
 	}
 	catch (const UrbanEngine::UrbanException& ex)
 	{
@@ -46,6 +45,8 @@ int WinMain(	HINSTANCE hInstance,
 	{
 		MessageBoxW(nullptr, L"There is no description about the error!", L"Unknown Error", MB_ICONERROR);
 	}
+
+	return -1;
 }
 
 #endif // URBAN_PLATFORM_WINDOWS

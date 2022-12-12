@@ -2,25 +2,27 @@
 
 #include <iostream>
 
-TestApp::TestApp()
+using namespace UrbanEngine;
+
+TestApp::TestApp() : App()
 {
 	std::cout << "TestApp::TestApp()" << std::endl;
 }
 
 TestApp::~TestApp()
 {
-
 	std::cout << "TestApp::~TestApp()" << std::endl;
 }
 
 void TestApp::Start()
 {
+	App::Start();
 	std::cout << "TestApp::Start()" << std::endl;
 }
 
 void TestApp::Update()
 {
+	App::Update();
 	std::cout << "TestApp::Update()" << std::endl;
-	throw UrbanEngine::UrbanExceptionUnicode(__LINE__, __FILEW__);
-	UrbanEngine::AppManager::QuitApplication();
+	//AppManager::QuitApplication();
 }

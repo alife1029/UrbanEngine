@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Window.h"
+
 namespace UrbanEngine
 {
 	class App
@@ -13,6 +15,9 @@ namespace UrbanEngine
 
 		virtual void Start();
 		virtual void Update();
+
+	protected:
+		Window* m_Window;
 	};
 
 	// To be defined in client
