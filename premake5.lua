@@ -7,6 +7,8 @@ workspace "UrbanEngine"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}"
 
+include "dependencies.lua"
+
 project "UrbanEngine"
     location "UrbanEngine"
     kind "StaticLib"
@@ -26,14 +28,21 @@ project "UrbanEngine"
     }
 
     includedirs {
-        "UrbanEngine/src"
+        "UrbanEngine/src",
+        IncludeDirs["glm"]
     }
 
     filter "configurations:Debug"
-        defines "URBAN_DEBUG"
+        defines {
+            "URBAN_IS_DEBUG=true",
+            "URBAN_DEBUG"
+        }
         symbols "On"
     filter "configurations:Release"
-        defines "URBAN_RELEASE"
+        defines {
+            "URBAN_IS_DEBUG=false",
+            "URBAN_RELEASE"
+        }
         optimize "On"
     
     filter "system:windows"
@@ -59,7 +68,8 @@ project "TestApp"
 
     includedirs {
         "UrbanEngine/src",
-        "%{prj.name}/src"
+        "%{prj.name}/src",
+        IncludeDirs["glm"]
     }
 
     links {
@@ -67,10 +77,16 @@ project "TestApp"
     }
 
     filter "configurations:Debug"
-        defines "URBAN_DEBUG"
+        defines {
+            "URBAN_IS_DEBUG=true",
+            "URBAN_DEBUG"
+        }
         symbols "On"
     filter "configurations:Release"
-        defines "URBAN_RELEASE"
+        defines {
+            "URBAN_IS_DEBUG=false",
+            "URBAN_RELEASE"
+        }
         optimize "On"
 
     filter "system:windows"

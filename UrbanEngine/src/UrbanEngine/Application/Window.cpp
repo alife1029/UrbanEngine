@@ -7,7 +7,7 @@ namespace UrbanEngine
 		:
 		m_Properties(winCfg),
 		m_IsOpen(false),
-		m_IsAlive(false)
+		m_Graphics(nullptr)
 	{ }
 
 	Window::~Window() { }
@@ -47,4 +47,11 @@ namespace UrbanEngine
 	}
 	
 	void Window::ProcessEvents() { }
+	
+	void Window::CreateGraphicContext(Graphics::API api) { }
+
+	Graphics* Window::Gfx() const noexcept
+	{
+		return m_Graphics;
+	}
 }

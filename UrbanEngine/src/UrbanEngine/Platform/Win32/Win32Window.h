@@ -40,7 +40,10 @@ namespace UrbanEngine
 		virtual void Show() override;
 		virtual void Hide() override;
 
+		HWND GetHWND() const noexcept;
+
 		virtual void ProcessEvents() override;
+		virtual void CreateGraphicContext(Graphics::API api);
 
 	private:
 		HWND hWnd;

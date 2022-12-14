@@ -1,6 +1,7 @@
 #include "urbanpch.h"
 #include "Win32Window.h"
 #include "UrbanEngine/Application/AppManager.h"
+#include "UrbanEngine/Platform/DirectX/D3D11Graphics.h"
 
 #define URBAN_WIN32WND_EXCEPT(hr) UrbanEngine::Win32Window::HrException(__LINE__, __FILEW__, hr)
 #define URBAN_WIN32WND_LASTEXCEPT() UrbanEngine::Win32Window::HrException(__LINE__, __FILEW__, GetLastError())
@@ -95,12 +96,11 @@ namespace UrbanEngine
 		{
 			throw URBAN_WIN32WND_LASTEXCEPT();
 		}
-
-		m_IsAlive = true;
 	}
 	
 	Win32Window::~Win32Window()
 	{
+		delete m_Graphics;
 		DestroyWindow(hWnd);
 	}
 
@@ -142,6 +142,11 @@ namespace UrbanEngine
 		m_IsOpen = false;
 	}
 
+	HWND Win32Window::GetHWND() const noexcept
+	{
+		return hWnd;
+	}
+
 	void Win32Window::ProcessEvents()
 	{
 		MSG msg;
@@ -155,6 +160,14 @@ namespace UrbanEngine
 
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
+		}
+	}
+
+	void Win32Window::CreateGraphicContext(Graphics::API api)
+	{
+		if (api == Graphics::API::D3D11)
+		{
+			m_Graphics = new D3D11Graphics(this);
 		}
 	}
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "WindowConfig.h"
+#include "UrbanEngine/Graphics/Graphics.h"
 
 namespace UrbanEngine
 {
@@ -15,7 +16,6 @@ namespace UrbanEngine
 		std::wstring Title() const noexcept;
 		bool IsFullScreen() const noexcept;
 		bool IsOpen() const noexcept;
-		bool IsAlive() const noexcept;
 
 		virtual void SetWidth(int width);
 		virtual void SetHeight(int height);
@@ -25,9 +25,13 @@ namespace UrbanEngine
 		virtual void Hide();
 
 		virtual void ProcessEvents();
+		virtual void CreateGraphicContext(Graphics::API api);
+
+		// TODO: Think about this
+		Graphics* Gfx() const noexcept;
 	protected:
 		WindowConfig m_Properties;
 		bool m_IsOpen;
-		bool m_IsAlive;
+		Graphics* m_Graphics;
 	};
 }

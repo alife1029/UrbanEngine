@@ -1,0 +1,3 @@
+[submodule "UrbanEngine/vendor/glm"]
+	path = UrbanEngine/vendor/glm
+	url = https://github.com/g-truc/glm.git

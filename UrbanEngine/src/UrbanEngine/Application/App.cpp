@@ -3,6 +3,7 @@
 
 #ifdef URBAN_PLATFORM_WINDOWS
 #include "UrbanEngine/Platform/Win32/Win32Window.h"
+#include "UrbanEngine/Graphics/Graphics.h"
 #endif
 
 namespace UrbanEngine
@@ -12,6 +13,7 @@ namespace UrbanEngine
 #ifdef URBAN_PLATFORM_WINDOWS
 		WindowConfig wndCfg;
 		m_Window = new Win32Window(wndCfg);
+		m_Window->CreateGraphicContext(UrbanEngine::Graphics::API::D3D11);
 #endif
 	}
 	
@@ -27,6 +29,6 @@ namespace UrbanEngine
 	
 	void App::Update() 
 	{
-		m_Window->ProcessEvents();
+		
 	}
 }
