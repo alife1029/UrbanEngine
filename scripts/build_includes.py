@@ -10,6 +10,8 @@ elif platform.system() == "Linux":
     slash = "/"
 
 def copy_headers(root_dir: str, out_dir: str):
+    print("Include folder creating...")
+
     if out_dir == None:
         if platform.system() == "Windows":
             out_dir = root_dir + f"{slash}bin{slash}Debug-windows{slash}UrbanEngine"
@@ -29,6 +31,7 @@ def copy_headers(root_dir: str, out_dir: str):
 
     engine_project_root = root_dir + f"{slash}UrbanEngine"
     engine_project_src_dir = engine_project_root + f"{slash}src"
+    engine_project_platform_dir = engine_project_src_dir + f"{slash}UrbanEngine{slash}Platform"
     engine_project_vendor_dir = engine_project_root + f"{slash}vendor"
 
     glm_root_dir = engine_project_vendor_dir + f"{slash}glm"
@@ -42,6 +45,10 @@ def copy_headers(root_dir: str, out_dir: str):
 
     # Scan src folder
     for root, sub_folders, files in os.walk(engine_project_src_dir):
+        # Skip platform headers
+        if engine_project_platform_dir in root:
+            continue
+
         for f in files:
             file_name, file_extension = os.path.splitext(root + f"{slash}" + f)
             # Skip precompiled header
