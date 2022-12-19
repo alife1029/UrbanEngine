@@ -1,10 +1,9 @@
 #include "urbanpch.h"
 #include "D3D11Graphics.h"
 #include "UrbanEngine/Platform/Win32/Win32Window.h"
+#include "D3D11GraphicsThrowMacros.h"
 
 #pragma comment(lib, "d3d11.lib")
-
-// TODO: Handle D3D exceptions!
 
 namespace UrbanEngine
 {
@@ -35,7 +34,10 @@ namespace UrbanEngine
 		swapCreateFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
-		D3D11CreateDeviceAndSwapChain(
+		// For checking results of D3D functions
+		HRESULT hr;
+
+		GFX_THROW_INFO(D3D11CreateDeviceAndSwapChain(
 			nullptr,
 			D3D_DRIVER_TYPE_HARDWARE,
 			nullptr,
@@ -48,7 +50,7 @@ namespace UrbanEngine
 			&m_Device,
 			nullptr,
 			&m_Context
-		);
+		));
 
 		// Create initial viewport
 		// TODO: Use viewport class here in future
@@ -63,17 +65,33 @@ namespace UrbanEngine
 
 		// Create render target view
 		Microsoft::WRL::ComPtr<ID3D11Resource> pBackBuffer;
-		m_Swapchain->GetBuffer(0, __uuidof(ID3D11Resource), &pBackBuffer);
-		m_Device->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &m_Target);
+		GFX_THROW_INFO(m_Swapchain->GetBuffer(0, __uuidof(ID3D11Resource), &pBackBuffer));
+		GFX_THROW_INFO(m_Device->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &m_Target));
 
+		// Set renderer API as Direct3D 11
 		m_API = API::D3D11;
 	}
 	
 	void D3D11Graphics::EndFrame()
 	{
-		// TODO: Check errors
 		// TODO: Implement turning on and off the VSync
-		m_Swapchain->Present(1u, 0u);
+
+		HRESULT hr;
+#ifdef URBAN_DEBUG
+		infoManager.Set();
+#endif
+
+		if (FAILED(hr = m_Swapchain->Present(1u, 0u)))
+		{
+			if (hr == DXGI_ERROR_DEVICE_REMOVED)
+			{
+				throw GFX_DEVICE_REMOVED_EXCEPT(m_Device->GetDeviceRemovedReason());
+			}
+			else
+			{
+				throw GFX_EXCEPT(hr);
+			}
+		}
 	}
 	
 	void D3D11Graphics::ClearBuffer(float red, float green, float blue, float alpha) noexcept
@@ -84,12 +102,12 @@ namespace UrbanEngine
 	
 	void D3D11Graphics::DrawIndexed(unsigned int count) noexcept(!URBAN_IS_DEBUG)
 	{
-		// TODO: Handle errors
-		m_Context->DrawIndexed(count, 0u, 0u);
+		GFX_THROW_INFO_ONLY(m_Context->DrawIndexed(count, 0u, 0u));
 	}
 
 
-
+#pragma region Exceptions
+	
 	D3D11Graphics::HrException::HrException(int line, const wchar_t* file, HRESULT hr, std::vector<std::wstring> infoMessages) noexcept
 		:
 		Exception(line, file),
@@ -215,4 +233,6 @@ namespace UrbanEngine
 	{
 		return L"Urban Engine Direct3D Graphics Exception [Device Removed] (DXGI_ERROR_DEVICE_REMOVED)";
 	}
+
+#pragma endregion
 }

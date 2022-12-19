@@ -2,6 +2,7 @@
 
 #include "UrbanEngine/Graphics/Graphics.h"
 #include "UrbanEngine/UrbanException.h"
+#include "DXGIInfoManager.h"
 #include <vector>
 #include <string>
 #include <Windows.h>
@@ -50,7 +51,7 @@ namespace UrbanEngine
 		public:
 			const wchar_t* GetType() const noexcept override;
 		private:
-			std::wstring& m_Reason;
+			std::wstring m_Reason;
 		};
 
 	public:
@@ -62,6 +63,11 @@ namespace UrbanEngine
 		void EndFrame() override;
 		void ClearBuffer(float red, float green, float blue, float alpha) noexcept override;
 		void DrawIndexed(unsigned int count) noexcept(!URBAN_IS_DEBUG) override;
+
+#ifdef URBAN_DEBUG
+	private:
+		DXGIInfoManager infoManager;
+#endif
 	
 	private:
 		Microsoft::WRL::ComPtr<ID3D11Device> m_Device;
