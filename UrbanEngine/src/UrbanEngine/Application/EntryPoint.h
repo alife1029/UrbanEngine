@@ -10,16 +10,16 @@ extern UrbanEngine::App* UrbanEngine::CreateApplication();
 
 #include <Windows.h>
 
-#ifdef URBAN_DEBUG
+#if URBAN_IS_DEBUG
 #pragma comment(linker, "/SUBSYSTEM:CONSOLE")
 int main(int argc, char** argv)
-#elif defined(URBAN_RELEASE)
+#else
 #pragma comment(linker, "/SUBSYSTEM:WINDOWS")
 int WINAPI WinMain(	HINSTANCE hInstance,
 					HINSTANCE hPrevInstance,
 					LPSTR lpCmdLine,
 					int nShowCmd	)
-#endif // URBAN_DEBUG
+#endif // URBAN_IS_DEBUG
 {
 	try
 	{

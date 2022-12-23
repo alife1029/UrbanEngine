@@ -3,6 +3,8 @@
 #include "UrbanEngine/Application/Window.h"
 #include "UrbanEngine/UrbanException.h"
 
+#include <Windows.h>
+
 namespace UrbanEngine
 {
 	class Win32Window : public Window

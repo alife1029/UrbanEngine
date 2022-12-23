@@ -64,7 +64,11 @@ namespace UrbanEngine
 		void ClearBuffer(float red, float green, float blue, float alpha) noexcept override;
 		void DrawIndexed(unsigned int count) noexcept(!URBAN_IS_DEBUG) override;
 
-#ifdef URBAN_DEBUG
+		ID3D11DeviceContext* GetContext() noexcept;
+		ID3D11Device* GetDevice() noexcept;
+		DXGIInfoManager& GetDXGIInfoManager() noexcept(URBAN_IS_DEBUG);
+
+#if URBAN_IS_DEBUG
 	private:
 		DXGIInfoManager infoManager;
 #endif

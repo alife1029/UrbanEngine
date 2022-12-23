@@ -30,7 +30,7 @@ namespace UrbanEngine
 		sd.Flags = NULL;
 
 		UINT swapCreateFlags = 0u;
-#ifdef URBAN_DEBUG
+#if URBAN_IS_DEBUG
 		swapCreateFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
@@ -77,7 +77,7 @@ namespace UrbanEngine
 		// TODO: Implement turning on and off the VSync
 
 		HRESULT hr;
-#ifdef URBAN_DEBUG
+#if URBAN_IS_DEBUG
 		infoManager.Set();
 #endif
 
@@ -103,6 +103,25 @@ namespace UrbanEngine
 	void D3D11Graphics::DrawIndexed(unsigned int count) noexcept(!URBAN_IS_DEBUG)
 	{
 		GFX_THROW_INFO_ONLY(m_Context->DrawIndexed(count, 0u, 0u));
+	}
+
+	ID3D11DeviceContext* D3D11Graphics::GetContext() noexcept
+	{
+		return m_Context.Get();
+	}
+
+	ID3D11Device* D3D11Graphics::GetDevice() noexcept
+	{
+		return m_Device.Get();
+	}
+
+	DXGIInfoManager& D3D11Graphics::GetDXGIInfoManager() noexcept(URBAN_IS_DEBUG)
+	{
+#if URBAN_IS_DEBUG
+		return infoManager;
+#else
+		throw std::logic_error("You can access DXGI Info Manager only in Debug configuration!");
+#endif
 	}
 
 
