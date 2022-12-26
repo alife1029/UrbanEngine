@@ -1,6 +1,11 @@
 project(TestApp VERSION 1.0.0)
 
-file(GLOB TEST_APP_SOURCES ${TEST_APP_DIR}/src/**.cpp)
+file(GLOB TEST_APP_SOURCES 
+        ${TEST_APP_DIR}/src/**.c
+        ${TEST_APP_DIR}/src/**.cpp
+        ${TEST_APP_DIR}/src/**.h
+        ${TEST_APP_DIR}/src/**.hpp
+        )
 
 add_executable(${PROJECT_NAME} ${TEST_APP_SOURCES})
 

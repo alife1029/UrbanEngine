@@ -12,15 +12,7 @@ elif platform.system() == "Linux":
 def copy_headers(root_dir: str, out_dir: str):
     print("Include folder creating...")
 
-    if out_dir == None:
-        if platform.system() == "Windows":
-            out_dir = root_dir + f"{slash}bin{slash}Debug-windows{slash}UrbanEngine"
-        elif platform.system() == "Linux":
-            out_dir = root_dir + f"{slash}build"
     out_dir += f"{slash}include{slash}"
-
-    if root_dir[-1] == slash:
-        root_dir = root_dir[0:len(root_dir) - 1]
 
     error_chars = ["/\\", "\\/", "//", "\\\\"]
     for char in error_chars:
@@ -86,33 +78,6 @@ def copy_headers(root_dir: str, out_dir: str):
 
 if __name__ == "__main__":
     working_dir = os.getcwd()
-    root_dir = None
-    out_dir = None
-
-    if len(sys.argv) == 1:
-        if working_dir[::-1][0:len(f"{slash}UrbanEngine{slash}scripts")][::-1] == f"{slash}UrbanEngine{slash}scripts":
-            root_dir = working_dir[0:len(working_dir) - len(f"{slash}scripts")]
-    else:
-        argument_mode = ""
-        for arg in sys.argv:
-            if arg == "-r":
-                argument_mode = "root"
-                continue
-            elif arg == "-o":
-                argument_mode = "out"
-                continue
-
-            if argument_mode == "root":
-                root_dir = arg
-            elif argument_mode == "out":
-                out_dir = arg
-
-    if root_dir != None:
-        copy_headers(root_dir, out_dir)
-    else:
-        if platform.system() == "Windows":
-            print(
-                f"Please enter root folder with \"-r\" parameter and output folder with \"-o\" parameter.\nExample Usage:\npy scripts{slash}build_includes.py -r \"C:{slash}Projects{slash}UrbanEngine\" -o \"C:{slash}Projects{slash}UrbanEngine{slash}bin{slash}Release-windows{slash}UrbanEngine\"")
-        elif platform.system() == "Linux":
-            print(
-                f"Please enter root folder with \"-r\" parameter and output folder with \"-o\" parameter.\nExample Usage:\npython3 scripts{slash}build_includes.py -r \"~{slash}Projects{slash}UrbanEngine\" -o \"~{slash}Projects{slash}UrbanEngine{slash}build\"")
+    root_dir = os.getcwd() + f"{slash}..{slash}"
+    out_dir = root_dir + f"build{slash}"
+    copy_headers(root_dir, out_dir)
