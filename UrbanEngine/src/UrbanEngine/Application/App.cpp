@@ -31,4 +31,9 @@ namespace UrbanEngine
 	{
 		
 	}
+	
+	Window* App::GetWindow() const noexcept
+	{
+		return m_Window;
+	}
 }

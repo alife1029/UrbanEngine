@@ -16,6 +16,8 @@ namespace UrbanEngine
 		virtual void Start();
 		virtual void Update();
 
+		Window* GetWindow() const noexcept;
+
 	protected:
 		Window* m_Window;
 	};

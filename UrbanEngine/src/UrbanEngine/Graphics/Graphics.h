@@ -32,7 +32,6 @@ namespace UrbanEngine
 	
 	protected:
 		glm::mat4 m_Projection;
-		Window* m_Window;
 		API m_API;
 	};
 }
