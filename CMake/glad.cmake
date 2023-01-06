@@ -1,0 +1,6 @@
+project(glad)
+add_library(${PROJECT_NAME} ${URBAN_DIR}/vendor/glad/src/glad.c)
+if(WIN32)
+	target_sources(${PROJECT_NAME} PRIVATE ${URBAN_DIR}/vendor/glad/src/glad_wgl.c)
+endif()
+target_include_directories(${PROJECT_NAME} PRIVATE ${URBAN_DIR}/vendor/glad/include)

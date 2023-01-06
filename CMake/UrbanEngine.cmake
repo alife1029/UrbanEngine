@@ -37,6 +37,11 @@ endif()
 list(APPEND URBAN_INCLUDES 
         ${URBAN_DIR}/src
         ${URBAN_DIR}/vendor/glm
+        ${URBAN_DIR}/vendor/glad/include
+        )
+
+list(APPEND URBAN_LINKS 
+        glad
         )
 
 file(GLOB URBAN_SOURCES
@@ -52,6 +57,10 @@ file(GLOB URBAN_SOURCES
             ${URBAN_DIR}/src/UrbanEngine/Graphics/**.cpp
             ${URBAN_DIR}/src/UrbanEngine/Graphics/**.hpp
             ${URBAN_DIR}/src/UrbanEngine/Graphics/**.h
+
+            ${URBAN_DIR}/src/UrbanEngine/Platform/OpenGL/**.cpp
+            ${URBAN_DIR}/src/UrbanEngine/Platform/OpenGL/**.hpp
+            ${URBAN_DIR}/src/UrbanEngine/Platform/OpenGL/**.h
             )
 
 if (WIN32)
@@ -68,6 +77,7 @@ endif()
 
 add_library(${PROJECT_NAME} ${URBAN_SOURCES})
 
+target_link_libraries(${PROJECT_NAME} ${URBAN_LINKS})
 target_include_directories(${PROJECT_NAME} PRIVATE ${URBAN_INCLUDES})
 target_precompile_headers(${PROJECT_NAME} PRIVATE ${URBAN_DIR}/src/urbanpch.h)
 

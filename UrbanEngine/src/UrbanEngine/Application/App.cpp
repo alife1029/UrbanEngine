@@ -13,7 +13,7 @@ namespace UrbanEngine
 #ifdef URBAN_PLATFORM_WINDOWS
 		WindowConfig wndCfg;
 		m_Window = new Win32Window(wndCfg);
-		m_Window->CreateGraphicContext(UrbanEngine::Graphics::API::D3D11);
+		m_Window->CreateGraphicContext(UrbanEngine::Graphics::API::GL460);
 #endif
 	}
 	

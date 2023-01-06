@@ -21,6 +21,9 @@ set(TEST_APP_DIR ${CMAKE_SOURCE_DIR}/TestApp)
 set(TEST_APP_INCLUDES)
 set(TEST_APP_LINKS)
 
+# Libraries
+include(${CMAKE_SOURCE_DIR}/CMake/glad.cmake)
+
 # Project CMake Lists
 include(${CMAKE_SOURCE_DIR}/CMake/UrbanEngine.cmake)
 include(${CMAKE_SOURCE_DIR}/CMake/TestApp.cmake)

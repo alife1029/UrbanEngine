@@ -2,6 +2,7 @@
 #include "Win32Window.h"
 #include "UrbanEngine/Application/AppManager.h"
 #include "UrbanEngine/Platform/DirectX/D3D11Graphics.h"
+#include "UrbanEngine/Platform/OpenGL/OpenGLGraphics.h"
 
 #define URBAN_WIN32WND_EXCEPT(hr) UrbanEngine::Win32Window::HrException(__LINE__, __FILEW__, hr)
 #define URBAN_WIN32WND_LASTEXCEPT() UrbanEngine::Win32Window::HrException(__LINE__, __FILEW__, GetLastError())
@@ -165,9 +166,21 @@ namespace UrbanEngine
 
 	void Win32Window::CreateGraphicContext(Graphics::API api)
 	{
-		if (api == Graphics::API::D3D11)
+		switch (api)
 		{
+		case UrbanEngine::Graphics::API::NONE:
+			break;
+		case UrbanEngine::Graphics::API::D3D11:
 			m_Graphics = new D3D11Graphics(this);
+			break;
+		case UrbanEngine::Graphics::API::GL460:
+			m_Graphics = new OpenGLGraphics(this);
+			break;
+		case UrbanEngine::Graphics::API::GLES30:
+			// TODO: Implement OpenGL ES 3.0 graphics
+			break;
+		default:
+			break;
 		}
 	}
 

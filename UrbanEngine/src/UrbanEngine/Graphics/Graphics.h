@@ -12,7 +12,7 @@ namespace UrbanEngine
 		{
 			NONE,
 			D3D11,
-			GL450,	// TODO: Implement OpenGL 4.5 graphics (for Windows, Linux and Mac)
+			GL460,	// TODO: Implement OpenGL 4.6 graphics (for Windows, Linux and Mac)
 			GLES30	// TODO: Implement OpenGL ES 3.0 graphics (for mobile platforms)
 		};
 
