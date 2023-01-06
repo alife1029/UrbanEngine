@@ -5,13 +5,13 @@ if(WIN32)
     add_custom_target(shaders)
     # Set HLSL shader sources
     set(HLSL_SOURCES
-            ${URBAN_DIR}/shader/d3d/BasicVS.hlsl
-            ${URBAN_DIR}/shader/d3d/BasicPS.hlsl
+            ${URBAN_DIR}/shader/d3d/Solid2DVS.hlsl
+            ${URBAN_DIR}/shader/d3d/Solid2DPS.hlsl
             )
 
     # Set HLSL shader properties
-    set_source_files_properties(${URBAN_DIR}/shader/d3d/BasicVS.hlsl PROPERTIES ShaderType "vs")
-    set_source_files_properties(${URBAN_DIR}/shader/d3d/BasicPS.hlsl PROPERTIES ShaderType "ps")
+    set_source_files_properties(${URBAN_DIR}/shader/d3d/Solid2DVS.hlsl PROPERTIES ShaderType "vs")
+    set_source_files_properties(${URBAN_DIR}/shader/d3d/Solid2DPS.hlsl PROPERTIES ShaderType "ps")
     set_source_files_properties(${HLSL_SOURCES} PROPERTIES ShaderModel "4_0")
 
     add_custom_command( TARGET shaders
