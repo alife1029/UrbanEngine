@@ -4,6 +4,8 @@
 
 #include <UrbanEngine/UrbanException.h>
 
+#include <glm/glm.hpp>
+
 namespace UrbanEngine
 {
 	class OpenGLShader : public Shader
@@ -41,6 +43,8 @@ namespace UrbanEngine
 		OpenGLShader(Graphics* gfx, const std::string& vsFile, const std::string& fsFile);
 		~OpenGLShader();
 		void Bind() override;
+
+		void SetUniformMat4(const std::string& varName, const glm::mat4& value) const noexcept;
 
 	private:
 		void AttachShader(const std::string& shaderFile, unsigned int type);

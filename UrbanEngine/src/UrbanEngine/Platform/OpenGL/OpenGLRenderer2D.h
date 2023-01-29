@@ -1,12 +1,11 @@
 #pragma once
 
-#include "D3D11Graphics.h"
-
+#include <UrbanEngine/Graphics/Graphics.h>
 #include <glm/glm.hpp>
 
 namespace UrbanEngine
 {
-	class D3D11Renderer2D
+	class OpenGLRenderer2D
 	{
 		friend class Renderer2D;
 	private:

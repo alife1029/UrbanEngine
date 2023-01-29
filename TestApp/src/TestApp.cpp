@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include <UrbanEngine/Graphics/Renderer2D.h>
+
 using namespace UrbanEngine;
 
 TestApp::TestApp() : App()
@@ -20,7 +22,30 @@ void TestApp::Start()
 void TestApp::Update()
 {
 	App::Update();
+
 	m_Window->ProcessEvents();
-	m_Window->Gfx()->ClearBuffer(1.0f, 0.0f, 0.0f, 1.0f);
+	
+	m_Window->Gfx()->ClearBuffer(0.0f, 0.0f, 0.0f, 1.0f);
+	
+	Renderer2D::BeginFrame(glm::mat4(1.0f));
+
+	const float width = 0.25f;
+	const float height = 0.25f;
+	unsigned int counter = 0;
+	for (float x = -1.0f; x <= 1.0f; x += width)
+	{
+		for (float y = -1.0f; y <= 1.0f; y += height)
+		{
+			glm::vec4 color;
+
+			if (++counter % 2 == 0) color = { 0.2f, 0.2f, 0.2f, 1.0f };
+			else color = { 0.1f, 0.1f, 0.1f, 1.0f };
+
+			Renderer2D::DrawQuad({ x, y }, { width, height }, 0.0f, color);
+		}
+	}
+
+	Renderer2D::EndFrame();
+	
 	m_Window->Gfx()->EndFrame();
 }

@@ -4,6 +4,7 @@
 #include <sstream>
 
 #include <glad/glad.h>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace UrbanEngine
 {
@@ -16,7 +17,12 @@ namespace UrbanEngine
 		{
 			ret << file_handler.rdbuf();
 		}
-
+		else
+		{
+			// TODO: Handle this by throwing an exceptions
+			std::cout << "File not found! (" << file << ")" << std::endl;
+		}
+		
 		return ret.str();
 	}
 
@@ -25,6 +31,11 @@ namespace UrbanEngine
 		Shader(gfx, vsFile, fsFile)
 	{
 		m_ProgramID = glCreateProgram();
+		
+		AttachShader(vsFile, GL_VERTEX_SHADER);
+		AttachShader(fsFile, GL_FRAGMENT_SHADER);
+
+		LinkProgram();
 	}
 
 	OpenGLShader::~OpenGLShader()
@@ -35,6 +46,11 @@ namespace UrbanEngine
 	void OpenGLShader::Bind()
 	{
 		glUseProgram(m_ProgramID);
+	}
+
+	void OpenGLShader::SetUniformMat4(const std::string& varName, const glm::mat4& value) const noexcept
+	{
+		glUniformMatrix4fv(glGetUniformLocation(m_ProgramID, varName.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 	}
 
 	void OpenGLShader::AttachShader(const std::string& file, unsigned int type)

@@ -64,6 +64,8 @@ namespace UrbanEngine
 		wglSwapIntervalEXT(1);
 		
 		std::cout << "OpenGL Version: " << GLVersion.major << "." << GLVersion.minor << std::endl;
+
+		m_API = API::GL460;
 	}
 
 	OpenGLGraphics::~OpenGLGraphics()
