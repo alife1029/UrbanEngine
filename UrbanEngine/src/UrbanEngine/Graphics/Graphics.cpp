@@ -6,6 +6,7 @@ namespace UrbanEngine
 {
 	Graphics::Graphics(Window* window)
 		:
+		m_TargetWindow(window),
 		m_Projection(glm::mat4(1.0f)),
 		m_API(API::NONE)
 	{ }

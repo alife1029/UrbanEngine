@@ -77,10 +77,14 @@ namespace UrbanEngine
 
 	void OpenGLGraphics::EndFrame()
 	{
-		if (SwapBuffers(m_Device) == FALSE)
+		// Cahnge framebuffers only if the window is alive
+		if (m_TargetWindow->IsOpen())
 		{
-			// TODO: Throw Error details
-			std::cout << "Failed to swap framebuffers!" << std::endl;
+			if (SwapBuffers(m_Device) == FALSE)
+			{
+				// TODO: Throw Error details
+				std::cout << "Failed to swap framebuffers!" << std::endl;
+			}
 		}
 	}
 

@@ -209,6 +209,7 @@ namespace UrbanEngine
 		switch (msg)
 		{
 		case WM_CLOSE:
+			m_IsOpen = false;
 			AppManager::QuitApplication(0);
 			break;
 		default:
