@@ -19,8 +19,7 @@ namespace UrbanEngine
 		}
 		else
 		{
-			// TODO: Handle this by throwing an exceptions
-			std::cout << "File not found! (" << file << ")" << std::endl;
+			throw OpenGLShader::NotFoundError(__LINE__, __FILE__, file);
 		}
 		
 		return ret.str();
@@ -184,5 +183,31 @@ namespace UrbanEngine
 	std::string OpenGLShader::LinkError::GetGPULog() const noexcept
 	{
 		return m_InfoLog;
+	}
+	
+	OpenGLShader::NotFoundError::NotFoundError(int line, const char* file, const std::string& path)
+		:
+		UrbanException(line, file),
+		m_NotFoundPath(path)
+	{
+	}
+	const char* OpenGLShader::NotFoundError::what() const noexcept
+	{
+		std::ostringstream oss;
+
+		oss << GetType() << std::endl
+			<< "[File Not Found] " << GetNotFoundPath() << std::endl
+			<< "\n" << GetOriginString();
+
+		m_WhatBuffer = oss.str();
+		return m_WhatBuffer.c_str();
+	}
+	const char* OpenGLShader::NotFoundError::GetType() const noexcept
+	{
+		return "OpenGL Shader File Not Found";
+	}
+	std::string OpenGLShader::NotFoundError::GetNotFoundPath() const noexcept
+	{
+		return m_NotFoundPath;
 	}
 }

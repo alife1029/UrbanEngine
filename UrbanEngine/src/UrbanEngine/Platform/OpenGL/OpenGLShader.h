@@ -1,8 +1,7 @@
 #pragma once
 
 #include "UrbanEngine/Graphics/Shader.h"
-
-#include <UrbanEngine/UrbanException.h>
+#include "UrbanEngine/UrbanException.h"
 
 #include <glm/glm.hpp>
 
@@ -11,6 +10,19 @@ namespace UrbanEngine
 	class OpenGLShader : public Shader
 	{
 	public:
+		class NotFoundError : public UrbanException
+		{
+		public:
+			NotFoundError(int line, const char* file, const std::string& path);
+			const char* what() const noexcept override;
+			virtual const char* GetType() const noexcept override;
+
+			std::string GetNotFoundPath() const noexcept;
+
+		private:
+			std::string m_NotFoundPath;
+		};
+
 		class CompileError : public UrbanException
 		{
 		public:
