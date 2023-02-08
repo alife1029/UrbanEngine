@@ -25,13 +25,10 @@ namespace UrbanEngine
 		virtual void EndFrame();
 		virtual void ClearBuffer(float red, float green, float blue, float alpha) noexcept;
 		virtual void DrawIndexed(unsigned int count) noexcept(!URBAN_IS_DEBUG);
-		void SetProjection(const glm::mat4& projectionMatrix) noexcept;
-		glm::mat4 Projection() const noexcept;
 
 		API GetRendererAPI() const noexcept;
 	
 	protected:
-		glm::mat4 m_Projection;
 		API m_API;
 		Window* m_TargetWindow;
 	};
