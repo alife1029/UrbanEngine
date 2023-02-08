@@ -1,52 +1,5 @@
 project(UrbanEngine VERSION 1.0.0)
 
-# GLSL Shaders For OpenGL
-add_custom_target(GLSL_SHADERS)
-add_custom_command( TARGET GLSL_SHADERS
-                    COMMAND if not exist shaders mkdir shaders
-                    COMMENT "Creating Shader Folder"
-                    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-                    )
-add_custom_command( TARGET GLSL_SHADERS POST_BUILD
-                    COMMAND ${CMAKE_COMMAND} -E copy_directory
-                    ${URBAN_DIR}/shader/glsl/
-                    ${CMAKE_BINARY_DIR}/shaders/
-                    )
-
-# HLSL Shaders For Direct3D 11
-if(WIN32)
-    add_custom_target(HLSL_SHADERS)
-    # Set HLSL shader sources
-    set(HLSL_SOURCES
-            ${URBAN_DIR}/shader/d3d/Solid2DVS.hlsl
-            ${URBAN_DIR}/shader/d3d/Solid2DPS.hlsl
-            )
-
-    # Set HLSL shader properties
-    set_source_files_properties(${URBAN_DIR}/shader/d3d/Solid2DVS.hlsl PROPERTIES ShaderType "vs")
-    set_source_files_properties(${URBAN_DIR}/shader/d3d/Solid2DPS.hlsl PROPERTIES ShaderType "ps")
-    set_source_files_properties(${HLSL_SOURCES} PROPERTIES ShaderModel "4_0")
-
-    add_custom_command( TARGET HLSL_SHADERS
-                        COMMAND if not exist shaders mkdir shaders
-                        COMMENT "Creating Shader Folder"
-                        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-                        )
-
-    foreach(FILE ${HLSL_SOURCES})
-        get_filename_component(FILE_WE ${FILE} NAME_WE)
-        get_source_file_property(shadertype ${FILE} ShaderType)
-        get_source_file_property(shadermodel ${FILE} ShaderModel)
-        add_custom_command( TARGET HLSL_SHADERS
-                            COMMAND fxc.exe /nologo /Emain /T${shadertype}_${shadermodel} $<IF:$<CONFIG:DEBUG>,/Od,/O1> /Zi /Fo ${CMAKE_BINARY_DIR}/shaders/${FILE_WE}.cso /Fd ${CMAKE_BINARY_DIR}/shaders/${FILE_WE}.pdb ${FILE}
-                            MAIN_DEPENDENCY ${FILE}
-                            COMMENT "HLSL ${FILE}"
-                            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-                            VERBATIM
-                            )
-    endforeach(FILE)
-endif()
-
 list(APPEND URBAN_INCLUDES 
         ${URBAN_DIR}/src
         ${URBAN_DIR}/vendor/glm
@@ -96,9 +49,43 @@ target_link_libraries(${PROJECT_NAME} ${URBAN_LINKS})
 target_include_directories(${PROJECT_NAME} PRIVATE ${URBAN_INCLUDES})
 target_precompile_headers(${PROJECT_NAME} PRIVATE ${URBAN_DIR}/src/urbanpch.h)
 
-add_dependencies(${PROJECT_NAME} GLSL_SHADERS)
+# GLSL Shaders For OpenGL
+add_custom_command( TARGET ${PROJECT_NAME} PRE_BUILD 
+                    COMMAND if not exist shaders mkdir shaders
+                    COMMENT "Creating Shader Folder"
+                    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}                    
+                    )
+add_custom_command( TARGET ${PROJECT_NAME} POST_BUILD
+                    COMMAND ${CMAKE_COMMAND} -E copy_directory
+                    ${URBAN_DIR}/shader/glsl/
+                    ${CMAKE_BINARY_DIR}/shaders/
+                    )
+
+# HLSL Shaders For Direct3D 11
 if(WIN32)
-    add_dependencies(${PROJECT_NAME} HLSL_SHADERS)
+    # Set HLSL shader sources
+    file(GLOB HLSL_VS_SOURCES ${URBAN_DIR}/shader/d3d/**VS.hlsl)
+    file(GLOB HLSL_PS_SOURCES ${URBAN_DIR}/shader/d3d/**PS.hlsl)
+
+    # Vertex shaders
+    foreach (FILE ${HLSL_VS_SOURCES})
+        get_filename_component(FILE_WE ${FILE} NAME_WE)
+        add_custom_command( TARGET ${PROJECT_NAME} POST_BUILD
+                            COMMAND fxc.exe /nologo /Emain /Tvs_4_0 $<IF:$<CONFIG:Debug>,/Od,/O1> /Zi /Fo ${CMAKE_BINARY_DIR}/shaders/${FILE_WE}.cso /Fd ${CMAKE_BINARY_DIR}/shaders/${FILE_WE}.pdb ${FILE}
+                            COMMENT "HLSL ${FILE}"
+                            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                            )
+    endforeach(FILE)
+
+    # Pixel shaders
+    foreach (FILE ${HLSL_PS_SOURCES})
+        get_filename_component(FILE_WE ${FILE} NAME_WE)
+        add_custom_command( TARGET ${PROJECT_NAME} POST_BUILD
+                            COMMAND fxc.exe /nologo /Emain /Tps_4_0 $<IF:$<CONFIG:Debug>,/Od,/O1> /Zi /Fo ${CMAKE_BINARY_DIR}/shaders/${FILE_WE}.cso /Fd ${CMAKE_BINARY_DIR}/shaders/${FILE_WE}.pdb ${FILE}
+                            COMMENT "HLSL ${FILE}"
+                            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+                            )
+    endforeach(FILE)
 endif()
 
 list(APPEND TEST_APP_LINKS ${PROJECT_NAME})
