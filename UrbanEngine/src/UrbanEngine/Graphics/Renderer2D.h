@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Graphics.h"
+#include "Texture2D.h"
 #include <glm/glm.hpp>
 
 namespace UrbanEngine
@@ -22,6 +23,12 @@ namespace UrbanEngine
 		static void DrawQuad(const glm::vec2& pos, const glm::vec2& scale, const glm::vec4& color = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
 		static void DrawQuad(const glm::vec2& pos, float rotation, const glm::vec4& color = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
 		static void DrawQuad(const glm::vec2& pos, const glm::vec4& color = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
+
+		static void DrawQuad(Texture2D* texture, const glm::mat4& transform, const glm::vec4& color = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
+		static void DrawQuad(Texture2D* texture, const glm::vec2& pos, const glm::vec2& scale, float zRotation, const glm::vec4& color = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
+		static void DrawQuad(Texture2D* texture, const glm::vec2& pos, const glm::vec2& scale, const glm::vec4& color = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
+		static void DrawQuad(Texture2D* texture, const glm::vec2& pos, float rotation, const glm::vec4& color = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
+		static void DrawQuad(Texture2D* texture, const glm::vec2& pos, const glm::vec4& color = glm::vec4{ 1.0f, 1.0f, 1.0f, 1.0f });
 
 	private:
 		static Graphics* s_Gfx;

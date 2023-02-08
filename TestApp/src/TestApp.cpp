@@ -8,10 +8,13 @@ using namespace UrbanEngine;
 
 TestApp::TestApp() : App()
 {
+	m_Grass = Texture2D::LoadTexture(m_Window->Gfx(), "data/textures/grass.png", 256);
+	m_Rotation = 0.0f;
 }
 
 TestApp::~TestApp()
 {
+	delete m_Grass;
 }
 
 void TestApp::Start()
@@ -45,7 +48,11 @@ void TestApp::Update()
 		}
 	}
 
+	Renderer2D::DrawQuad(m_Grass, { 0.0f, 0.0f }, m_Rotation);
+
 	Renderer2D::EndFrame();
 	
 	m_Window->Gfx()->EndFrame();
+
+	m_Rotation += 1.4f;
 }

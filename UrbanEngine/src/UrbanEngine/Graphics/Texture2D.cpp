@@ -1,12 +1,51 @@
 #include "urbanpch.h"
 #include "Texture2D.h"
 
+#ifdef URBAN_PLATFORM_WINDOWS
+#include "UrbanEngine/Platform/DirectX/D3D11Texture2D.h"
+#endif
+
+#include "UrbanEngine/Platform/OpenGL/OpenGLTexture2D.h"
+
 namespace UrbanEngine
 {
+	Texture2D* Texture2D::LoadTexture(Graphics* gfx, const std::string& imageFile, unsigned int pixelPerUnit, bool forceRGBA, FilterMode filter, WrapMode wrap)
+	{
+		switch (gfx->GetRendererAPI())
+		{
+		case Graphics::API::D3D11:
+			// TODO: Return D3D11 Texture
+			//return new D3D11Texture2D(imageFile, pixelPerUnit, forceRGBA, filter, wrap);
+		case Graphics::API::GL460:
+			return new OpenGLTexture2D(imageFile, pixelPerUnit, forceRGBA, filter, wrap);
+		case Graphics::API::GLES30:
+			// TODO: Return OpenGL ES Texture
+			return nullptr;
+		default:
+			return nullptr;
+		}
+	}
+
+	Texture2D* Texture2D::LoadTexture(Graphics* gfx, unsigned char* pixels, int width, int height, int channelCount, unsigned int pixelPerUnit, FilterMode filter, WrapMode wrap)
+	{
+		switch (gfx->GetRendererAPI())
+		{
+		case Graphics::API::D3D11:
+		// TODO: Return D3D11 Texture	
+		//return new D3D11Texture2D(pixels, width, height, channelCount, pixelPerUnit, filter, wrap);
+		case Graphics::API::GL460:
+			return new OpenGLTexture2D(pixels, width, height, channelCount, pixelPerUnit, filter, wrap);
+		case Graphics::API::GLES30:
+			// TODO: Return OpenGL ES Texture
+			return nullptr;
+		default:
+			return nullptr;
+		}
+	}
+
 	Texture2D::Texture2D()
 		:
 		m_Path(std::string()),
-		m_ForceRGBA(false),
 		m_Width(0),
 		m_Height(0),
 		m_ChannelCount(0),
@@ -19,7 +58,6 @@ namespace UrbanEngine
 	Texture2D::Texture2D(unsigned char* pixels, int width, int height, int channelCount, unsigned int pixelPerUnit, FilterMode filter, WrapMode wrap)
 		:
 		m_Path(std::string()),
-		m_ForceRGBA(false),
 		m_Width(width),
 		m_Height(height),
 		m_ChannelCount(channelCount),
@@ -32,7 +70,6 @@ namespace UrbanEngine
 	Texture2D::Texture2D(const std::string & imageFile, unsigned int pixelPerUnit, bool forceRGBA, FilterMode filter, WrapMode wrap)
 		:
 		m_Path(imageFile),
-		m_ForceRGBA(forceRGBA),
 		m_PixelPerUnit(pixelPerUnit),
 		m_FilterMode(filter),
 		m_WrapMode(wrap),
@@ -58,11 +95,6 @@ namespace UrbanEngine
 	const std::string& Texture2D::GetPath() const noexcept
 	{
 		return m_Path;
-	}
-	
-	bool Texture2D::IsForcedToRGBA() const noexcept
-	{
-		return m_ForceRGBA;
 	}
 	
 	int Texture2D::Width() const noexcept

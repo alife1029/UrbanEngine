@@ -45,6 +45,7 @@ namespace UrbanEngine
 		void Bind() override;
 
 		void SetUniformMat4(const std::string& varName, const glm::mat4& value) const noexcept;
+		void SetIntArray(const std::string& varName, int* array, int arraySize) const noexcept;
 
 	private:
 		void AttachShader(const std::string& shaderFile, unsigned int type);

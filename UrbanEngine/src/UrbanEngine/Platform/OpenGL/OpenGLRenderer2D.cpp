@@ -1,3 +1,5 @@
+// TODO: Add texture support to the renderer
+
 #include "OpenGLRenderer2D.h"
 #include "OpenGLShader.h"
 #include "OpenGLGraphics.h"
@@ -6,7 +8,10 @@
 
 #include <cstdint>
 
-#define QUAD_PER_BATCH 1000
+constexpr size_t QUAD_PER_BATCH = 1000;
+
+// TODO: Detect max sampler array size support of the target gpu
+constexpr size_t MAX_TEXTURES = 16;
 
 namespace UrbanEngine
 {
@@ -14,6 +19,8 @@ namespace UrbanEngine
 	{
 		glm::vec2 Position;
 		glm::vec4 Color;
+		glm::vec2 TextureCoordinate;
+		float TextureIndex;
 	};
 
 	struct RendererData
@@ -28,6 +35,9 @@ namespace UrbanEngine
 
 		Vertex*			QuadBuffer = nullptr;
 		Vertex*			QuadBufferPtr = nullptr;
+
+		uint32_t*		TextureSlots = nullptr;
+		uint32_t		TextureSlotIndex = 0;
 
 		OpenGLShader*	ShaderProgram = nullptr;
 		
@@ -75,8 +85,12 @@ namespace UrbanEngine
 		// Vertex attributes
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
+		glEnableVertexAttribArray(2);
+		glEnableVertexAttribArray(3);
 		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Position));
 		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Color));
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TextureCoordinate));
+		glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TextureIndex));
 
 		// Unbind buffers
 		glBindVertexArray(0);
@@ -85,6 +99,12 @@ namespace UrbanEngine
 
 		// Delete indices array
 		delete[] indices;
+
+		// Texture slots initialization
+		s_Data.TextureSlots = new uint32_t[MAX_TEXTURES];
+		for (size_t i = 0; i < MAX_TEXTURES; i++)
+			s_Data.TextureSlots[i] = 0;
+		s_Data.TextureSlotIndex = 0;
 	}
 	
 	void OpenGLRenderer2D::Shutdown()
@@ -93,6 +113,7 @@ namespace UrbanEngine
 		glDeleteBuffers(1, &s_Data.VBO);
 		glDeleteBuffers(1, &s_Data.EBO);
 
+		delete[] s_Data.TextureSlots;
 		delete[] s_Data.QuadBuffer;
 		delete s_Data.ShaderProgram;
 	}
@@ -113,8 +134,17 @@ namespace UrbanEngine
 		// Activate the shader program
 		s_Data.ShaderProgram->Bind();
 
+		// Bind texture layers
+		int* samplers = new int[s_Data.TextureSlotIndex];
+		for (uint32_t i = 0; i < s_Data.TextureSlotIndex; i++)
+		{
+			glBindTextureUnit(i, s_Data.TextureSlots[i]);
+			samplers[i] = i;
+		}
+
 		// Update uniform variable values
 		s_Data.ShaderProgram->SetUniformMat4("u_ViewProj", s_Data.ViewProj);
+		s_Data.ShaderProgram->SetIntArray("u_Samplers", samplers, s_Data.TextureSlotIndex);
 
 		glBindVertexArray(s_Data.VAO);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_Data.EBO);
@@ -122,9 +152,12 @@ namespace UrbanEngine
 		s_Data.Gfx->DrawIndexed(s_Data.IndexCount);
 
 		s_Data.IndexCount = 0;
+		s_Data.TextureSlotIndex = 0;
+
+		delete[] samplers;
 	}
 	
-	void OpenGLRenderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color)
+	void OpenGLRenderer2D::DrawQuad(OpenGLTexture2D* texture, const glm::mat4& transform, const glm::vec4& color)
 	{
 		if (s_Data.IndexCount >= QUAD_PER_BATCH)
 		{
@@ -132,20 +165,54 @@ namespace UrbanEngine
 			BeginFrame(s_Data.ViewProj);
 		}
 
-		// Initial vertex positions
+		// Is the texture has used in the current batch?
+		float texIndex = -1.0f;
+		for (uint32_t i = 0; i < s_Data.TextureSlotIndex; i++)
+		{
+			if (s_Data.TextureSlots[i] == texture->GetID())
+			{
+				texIndex = (float)i;
+				break;
+			}
+		}
+
+		// If not used, add the id of this texture to the texture slots array
+		if (texIndex == -1.0f)
+		{
+			if (s_Data.TextureSlotIndex >= MAX_TEXTURES - 1)
+			{
+				EndFrame();
+				BeginFrame(s_Data.ViewProj);
+			}
+
+			texIndex = (float)s_Data.TextureSlotIndex;
+			s_Data.TextureSlots[s_Data.TextureSlotIndex] = texture->GetID();
+			++s_Data.TextureSlotIndex;
+		}
+
+		// Initial vertex datas (non-transformed)
+		float qHW = texture->Width() / 2.0f / texture->PixelPerUnit();	// Quad half width
+		float qHH = texture->Height() / 2.0f / texture->PixelPerUnit();	// Quad half height
 		glm::vec4 vertexPoses[] = {
-			{ -0.5f, -0.5f, 0.0f, 1.0f },
-			{  0.5f, -0.5f, 0.0f, 1.0f },
-			{  0.5f,  0.5f, 0.0f, 1.0f },
-			{ -0.5f,  0.5f, 0.0f, 1.0f }
+			{ -qHW, -qHH, 0.0f, 1.0f },
+			{  qHW, -qHH, 0.0f, 1.0f },
+			{  qHW,  qHH, 0.0f, 1.0f },
+			{ -qHW,  qHH, 0.0f, 1.0f }
+		};
+		glm::vec2 texCoords[] = {
+			{ 0.0f, 0.0f },
+			{ 1.0f, 0.0f },
+			{ 1.0f, 1.0f },
+			{ 0.0f, 1.0f }
 		};
 		
-		// Transform vertex poses
-		for (auto vertexPos : vertexPoses)
+		// Calculate each vertex
+		for (size_t i = 0; i < 4; i++)
 		{
-			glm::vec2 pos = transform * vertexPos;
-			s_Data.QuadBufferPtr->Position = pos;
+			s_Data.QuadBufferPtr->Position = transform * vertexPoses[i];
 			s_Data.QuadBufferPtr->Color = color;
+			s_Data.QuadBufferPtr->TextureCoordinate = texCoords[i];
+			s_Data.QuadBufferPtr->TextureIndex = texIndex;
 			++s_Data.QuadBufferPtr;
 		}
 

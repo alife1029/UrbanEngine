@@ -51,10 +51,12 @@ list(APPEND URBAN_INCLUDES
         ${URBAN_DIR}/src
         ${URBAN_DIR}/vendor/glm
         ${URBAN_DIR}/vendor/glad/include
+        ${URBAN_DIR}/vendor/stb/include
         )
 
 list(APPEND URBAN_LINKS 
         glad
+        stb
         )
 
 file(GLOB URBAN_SOURCES

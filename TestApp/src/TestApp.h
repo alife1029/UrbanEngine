@@ -11,4 +11,8 @@ public:
 	TestApp& operator=(const TestApp&) = delete;
 	void Start();
 	void Update();
+
+private:
+	UrbanEngine::Texture2D* m_Grass;
+	float m_Rotation;
 };

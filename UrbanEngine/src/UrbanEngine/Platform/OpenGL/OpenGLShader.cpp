@@ -53,6 +53,11 @@ namespace UrbanEngine
 		glUniformMatrix4fv(glGetUniformLocation(m_ProgramID, varName.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 	}
 
+	void OpenGLShader::SetIntArray(const std::string& varName, int* array, int arraySize) const noexcept
+	{
+		glUniform1iv(glGetUniformLocation(m_ProgramID, varName.c_str()), arraySize, array);
+	}
+
 	void OpenGLShader::AttachShader(const std::string& file, unsigned int type)
 	{
 		// Read glsl source file

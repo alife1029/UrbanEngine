@@ -23,6 +23,7 @@ set(TEST_APP_LINKS)
 
 # Libraries
 include(${CMAKE_SOURCE_DIR}/CMake/glad.cmake)
+include(${CMAKE_SOURCE_DIR}/CMake/stb.cmake)
 
 # Project CMake Lists
 include(${CMAKE_SOURCE_DIR}/CMake/UrbanEngine.cmake)

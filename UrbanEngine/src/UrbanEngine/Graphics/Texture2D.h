@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include "Graphics.h"
 
 namespace UrbanEngine
 {
@@ -21,17 +22,19 @@ namespace UrbanEngine
 		};
 
 	public:
+		static Texture2D* LoadTexture(Graphics* gfx, const std::string& imageFile, unsigned int pixelPerUnit = 100u, bool forceRGBA = false, FilterMode filter = FilterMode::Bilinear, WrapMode wrap = WrapMode::Clamp);
+		static Texture2D* LoadTexture(Graphics* gfx, unsigned char* pixels, int width, int height, int channelCount, unsigned int pixelPerUnit = 100u, FilterMode filter = FilterMode::Bilinear, WrapMode wrap = WrapMode::Clamp);
+
+	public:
 		Texture2D();
-		Texture2D(const Texture2D&) = default;
-		Texture2D(unsigned char* pixels, int width, int height, int channelCount, unsigned int pixelPerUnit = 100u, FilterMode filter = FilterMode::Bilinear, WrapMode wrap = WrapMode::Clamp);
-		Texture2D(const std::string& imageFile, unsigned int pixelPerUnit = 100u, bool forceRGBA = true, FilterMode filter = FilterMode::Bilinear, WrapMode wrap = WrapMode::Clamp);
+		Texture2D(const Texture2D&) = delete;
+		Texture2D(unsigned char* pixels, int width, int height, int channelCount, unsigned int pixelPerUnit, FilterMode filter, WrapMode wrap);
+		Texture2D(const std::string& imageFile, unsigned int pixelPerUnit, bool forceRGBA, FilterMode filter, WrapMode wrap);
 		virtual ~Texture2D();
 		virtual void Bind();
 
-		// Getters
 		virtual bool IsValid() const noexcept;
 		const std::string& GetPath() const noexcept;
-		bool IsForcedToRGBA() const noexcept;
 		int Width() const noexcept;
 		int Height() const noexcept;
 		int ChannelCount() const noexcept;
@@ -39,7 +42,6 @@ namespace UrbanEngine
 		FilterMode GetFilterMode() const noexcept;
 		WrapMode GetWrapMode() const noexcept;
 
-		// Setters
 		void SetPixelPerUnit(int ppu) noexcept;
 		void SetFilterMode(FilterMode mode) noexcept;
 		void SetWrapMode(WrapMode mode) noexcept;
@@ -52,7 +54,6 @@ namespace UrbanEngine
 
 	protected:
 		std::string m_Path;
-		bool m_ForceRGBA;
 		int m_Width;
 		int m_Height;
 		int m_ChannelCount;
