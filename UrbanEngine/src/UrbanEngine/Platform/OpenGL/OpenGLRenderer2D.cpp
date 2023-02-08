@@ -143,8 +143,8 @@ namespace UrbanEngine
 		}
 
 		// Update uniform variable values
-		s_Data.ShaderProgram->SetUniformMat4("u_ViewProj", s_Data.ViewProj);
-		s_Data.ShaderProgram->SetIntArray("u_Samplers", samplers, s_Data.TextureSlotIndex);
+		s_Data.ShaderProgram->SetUniformMatrix4("u_ViewProj", s_Data.ViewProj);
+		s_Data.ShaderProgram->SetUniformIntArray("u_Samplers", samplers, s_Data.TextureSlotIndex);
 
 		glBindVertexArray(s_Data.VAO);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_Data.EBO);
