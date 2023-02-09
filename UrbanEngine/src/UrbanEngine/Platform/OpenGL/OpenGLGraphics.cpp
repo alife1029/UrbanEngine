@@ -44,15 +44,13 @@ namespace UrbanEngine
 		// Load Modern OpenGL
 		if (!gladLoadGL())
 		{
-			// TODO: Throw OpenGL Context Initialization Error
-			std::cout << "Failed load Modern OpenGL!" << std::endl;
+			throw InitializationError(__LINE__, __FILE__, "Failed to load Modern OpenGL functions!");
 		}
 
 		// Load GLAD WGL
 		if (!gladLoadWGL(m_Device))
 		{
-			// TODO: Throw error details
-			std::cout << "Failed to load WGL Extensions!" << std::endl;
+			throw InitializationError(__LINE__, __FILE__, "Failed to load WGL extensions!");
 		}
 
 		// Initial viewport
@@ -82,8 +80,7 @@ namespace UrbanEngine
 		{
 			if (SwapBuffers(m_Device) == FALSE)
 			{
-				// TODO: Throw Error details
-				std::cout << "Failed to swap framebuffers!" << std::endl;
+				throw FramebufferSwapError(__LINE__, __FILE__);
 			}
 		}
 	}
@@ -97,5 +94,52 @@ namespace UrbanEngine
 	void OpenGLGraphics::DrawIndexed(unsigned int count) noexcept(!URBAN_IS_DEBUG)
 	{
 		glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_SHORT, (const void*)0);
+	}
+	
+	OpenGLGraphics::InitializationError::InitializationError(int line, const char* file, const std::string& errorDetails)
+		:
+		UrbanException(line, file),
+		m_Details(errorDetails)
+	{
+	}
+	const char* OpenGLGraphics::InitializationError::what() const noexcept
+	{
+		std::ostringstream oss;
+
+		oss << GetType() << std::endl
+			<< "[Error Details] " << GetErrorDetails() << std::endl
+			<< GetOriginString();
+
+		m_WhatBuffer = oss.str();
+		return m_WhatBuffer.c_str();
+	}
+	const char* OpenGLGraphics::InitializationError::GetType() const noexcept
+	{
+		return "Urban Engine OpenGL Graphics Initialization Error";
+	}
+	std::string OpenGLGraphics::InitializationError::GetErrorDetails() const noexcept
+	{
+		return m_Details;
+	}
+	
+	OpenGLGraphics::FramebufferSwapError::FramebufferSwapError(int line, const char* file)
+		:
+		UrbanException(line, file)
+	{
+	}
+	const char* OpenGLGraphics::FramebufferSwapError::what() const noexcept
+	{
+		std::ostringstream oss;
+
+		oss << GetType() << std::endl
+			<< "Failed to swap front and back framebuffers!" << std::endl
+			<< GetOriginString();
+
+		m_WhatBuffer = oss.str();
+		return m_WhatBuffer.c_str();
+	}
+	const char* OpenGLGraphics::FramebufferSwapError::GetType() const noexcept
+	{
+		return "Urban Engine OpenGL Graphics Framebuffer Swap Error";
 	}
 }

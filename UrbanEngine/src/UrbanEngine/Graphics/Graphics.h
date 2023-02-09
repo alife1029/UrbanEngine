@@ -11,8 +11,8 @@ namespace UrbanEngine
 		enum class API
 		{
 			NONE,
-			D3D11,
-			GL460,	// TODO: Implement OpenGL 4.6 graphics (for Windows, Linux and Mac)
+			D3D11,	// TODO: Implement D3D11 Graphics (for Windows)
+			GL460,
 			GLES30	// TODO: Implement OpenGL ES 3.0 graphics (for mobile platforms)
 		};
 
