@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <sstream>
+#include <regex>
 
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
@@ -15,6 +16,13 @@
 
 namespace UrbanEngine
 {
+	std::string PreprocessGLSL_Source(const std::string& str)
+	{
+		int maxTextures;
+		glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxTextures);
+		return std::regex_replace(str, std::regex("#define MAX_TEXTURES"), "#define MAX_TEXTURES " + std::to_string(maxTextures));
+	}
+
 	std::string ReadFileContent(const std::string& file)
 	{
 		std::ifstream file_handler(file);
@@ -29,7 +37,7 @@ namespace UrbanEngine
 			throw OpenGLShader::NotFoundError(__LINE__, __FILE__, file);
 		}
 		
-		return ret.str();
+		return PreprocessGLSL_Source(ret.str());
 	}
 
 	OpenGLShader::OpenGLShader(Graphics* gfx, const std::string& vsFile, const std::string& fsFile)

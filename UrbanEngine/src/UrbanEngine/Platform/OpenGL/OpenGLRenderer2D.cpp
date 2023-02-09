@@ -1,5 +1,3 @@
-// TODO: Add texture support to the renderer
-
 #include "OpenGLRenderer2D.h"
 #include "OpenGLShader.h"
 #include "OpenGLGraphics.h"
@@ -8,10 +6,8 @@
 
 #include <cstdint>
 
-constexpr size_t QUAD_PER_BATCH = 1000;
-
-// TODO: Detect max sampler array size support of the target gpu
-constexpr size_t MAX_TEXTURES = 16;
+static constexpr size_t QUAD_PER_BATCH = 1000;
+static int MAX_TEXTURES = 0;
 
 namespace UrbanEngine
 {
@@ -48,6 +44,8 @@ namespace UrbanEngine
 
 	void OpenGLRenderer2D::Initialize(Graphics* gfx)
 	{
+		glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &MAX_TEXTURES);
+
 		s_Data.Gfx = reinterpret_cast<OpenGLGraphics*>(gfx);
 		s_Data.ShaderProgram = new OpenGLShader(gfx, "shaders/Solid2DVS.glsl", "shaders/Solid2DFS.glsl");
 		

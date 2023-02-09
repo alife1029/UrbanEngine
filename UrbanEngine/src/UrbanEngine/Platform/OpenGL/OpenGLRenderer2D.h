@@ -1,8 +1,8 @@
 #pragma once
 
 #include "OpenGLTexture2D.h"
+#include "UrbanEngine/Graphics/Graphics.h"
 
-#include <UrbanEngine/Graphics/Graphics.h>
 #include <glm/glm.hpp>
 
 namespace UrbanEngine

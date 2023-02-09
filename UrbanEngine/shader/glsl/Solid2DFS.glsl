@@ -1,6 +1,6 @@
 #version 450 core
 
-#define MAX_TEXTURES 16
+#define MAX_TEXTURES
 
 in vec4 v_Color;
 in vec2 v_TexCoord;
