@@ -58,6 +58,9 @@ namespace UrbanEngine
 		~OpenGLShader();
 		void Bind() override;
 
+	public:
+		unsigned int Id() const noexcept;
+
 #pragma region Uniform Setters
 		void SetUniformInt(const std::string& varName, int value) const noexcept;
 		void SetUniformIVec2(const std::string& varName, const glm::ivec2& value) const noexcept;

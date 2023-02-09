@@ -54,6 +54,11 @@ namespace UrbanEngine
 		glUseProgram(m_ProgramID);
 	}
 
+	unsigned int OpenGLShader::Id() const noexcept
+	{
+		return m_ProgramID;
+	}
+
 #pragma region Uniform Setters
 
 #pragma region Integer
