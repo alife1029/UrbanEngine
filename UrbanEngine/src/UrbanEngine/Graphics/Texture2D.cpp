@@ -7,8 +7,17 @@
 
 #include "UrbanEngine/Platform/OpenGL/OpenGLTexture2D.h"
 
+#include <stb/stb_image.h>
+
 namespace UrbanEngine
 {
+	Texture2D* Texture2D::LoadWhiteTexture(Graphics* gfx)
+	{
+		// Constuct a 1x1 white texture
+		unsigned char pixelData[] = { 255, 255, 255 };
+		return LoadTexture(gfx, pixelData, 1, 1, 3, 1, FilterMode::Point, WrapMode::Clamp);
+	}
+
 	Texture2D* Texture2D::LoadTexture(Graphics* gfx, const std::string& imageFile, unsigned int pixelPerUnit, bool forceRGBA, FilterMode filter, WrapMode wrap)
 	{
 		switch (gfx->GetRendererAPI())
@@ -42,22 +51,9 @@ namespace UrbanEngine
 			return nullptr;
 		}
 	}
-
-	Texture2D::Texture2D()
-		:
-		m_Path(std::string()),
-		m_Width(0),
-		m_Height(0),
-		m_ChannelCount(0),
-		m_PixelPerUnit(0),
-		m_FilterMode(FilterMode::Bilinear),
-		m_WrapMode(WrapMode::Clamp)
-	{
-	}
 	
 	Texture2D::Texture2D(unsigned char* pixels, int width, int height, int channelCount, unsigned int pixelPerUnit, FilterMode filter, WrapMode wrap)
 		:
-		m_Path(std::string()),
 		m_Width(width),
 		m_Height(height),
 		m_ChannelCount(channelCount),
@@ -69,7 +65,6 @@ namespace UrbanEngine
 
 	Texture2D::Texture2D(const std::string & imageFile, unsigned int pixelPerUnit, bool forceRGBA, FilterMode filter, WrapMode wrap)
 		:
-		m_Path(imageFile),
 		m_PixelPerUnit(pixelPerUnit),
 		m_FilterMode(filter),
 		m_WrapMode(wrap),
@@ -90,11 +85,6 @@ namespace UrbanEngine
 	bool Texture2D::IsValid() const noexcept
 	{
 		return false;
-	}
-	
-	const std::string& Texture2D::GetPath() const noexcept
-	{
-		return m_Path;
 	}
 	
 	int Texture2D::Width() const noexcept
@@ -132,30 +122,23 @@ namespace UrbanEngine
 		m_PixelPerUnit = ppu;
 	}
 	
-	void Texture2D::SetFilterMode(FilterMode mode) noexcept
-	{
-		if (mode != m_FilterMode)
-		{
-			m_FilterMode = mode;
-			ChangeFilterMode(mode);
-		}
-	}
-	
-	void Texture2D::SetWrapMode(WrapMode mode) noexcept
-	{
-		if (mode != m_WrapMode)
-		{
-			m_WrapMode = mode;
-			ChangeWrapMode(mode);
-		}
-	}
-	
 	void Texture2D::GenerateTextureFromBytes(unsigned char* pixels, int w, int h, int ch, FilterMode f, WrapMode wrp)
 	{
 	}
 	
 	void Texture2D::LoadImageFromFile(const std::string& file, bool forceRGBA, FilterMode f, WrapMode w)
 	{
+		int width, height, channelCount;
+		unsigned char* pixels;
+
+		int desiredChannelCount = forceRGBA ? STBI_rgb_alpha : STBI_default;
+
+		stbi_set_flip_vertically_on_load(true);
+		pixels = stbi_load(file.c_str(), &width, &height, &channelCount, desiredChannelCount);
+
+		GenerateTextureFromBytes(pixels, width, height, desiredChannelCount == 0 ? channelCount : desiredChannelCount, f, w);
+
+		stbi_image_free(pixels);
 	}
 	
 	void Texture2D::ChangeFilterMode(FilterMode f)

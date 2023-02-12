@@ -25,20 +25,17 @@ namespace UrbanEngine
 	void Renderer2D::Initialize(Graphics* gfx)
 	{
 		s_Gfx = gfx;
+		s_WhiteTexture = Texture2D::LoadWhiteTexture(gfx);
 
 		switch (s_Gfx->GetRendererAPI())
 		{
 		case Graphics::API::D3D11:
-			// TODO: Create D3D11 white texture
-			//s_WhiteTexture = new D3D11Texture2D();
 			D3D11Renderer2D::Initialize(s_Gfx);
 			break;
 		case Graphics::API::GL460:
-			s_WhiteTexture = new OpenGLTexture2D();
 			OpenGLRenderer2D::Initialize(s_Gfx);
 			break;
 		case Graphics::API::GLES30:
-			// TODO: Create OpenGL ES 3.0 White Texture
 			// TODO: OpenGL ES 3.0 Initialize
 			break;
 		}

@@ -22,19 +22,21 @@ namespace UrbanEngine
 		};
 
 	public:
+		static Texture2D* LoadWhiteTexture(Graphics* gfx);
 		static Texture2D* LoadTexture(Graphics* gfx, const std::string& imageFile, unsigned int pixelPerUnit = 100u, bool forceRGBA = false, FilterMode filter = FilterMode::Bilinear, WrapMode wrap = WrapMode::Clamp);
 		static Texture2D* LoadTexture(Graphics* gfx, unsigned char* pixels, int width, int height, int channelCount, unsigned int pixelPerUnit = 100u, FilterMode filter = FilterMode::Bilinear, WrapMode wrap = WrapMode::Clamp);
 
-	public:
-		Texture2D();
-		Texture2D(const Texture2D&) = delete;
+	protected:
 		Texture2D(unsigned char* pixels, int width, int height, int channelCount, unsigned int pixelPerUnit, FilterMode filter, WrapMode wrap);
 		Texture2D(const std::string& imageFile, unsigned int pixelPerUnit, bool forceRGBA, FilterMode filter, WrapMode wrap);
+
+	public:
+		Texture2D(const Texture2D&) = delete;
 		virtual ~Texture2D();
+
 		virtual void Bind();
 
 		virtual bool IsValid() const noexcept;
-		const std::string& GetPath() const noexcept;
 		int Width() const noexcept;
 		int Height() const noexcept;
 		int ChannelCount() const noexcept;
@@ -43,17 +45,15 @@ namespace UrbanEngine
 		WrapMode GetWrapMode() const noexcept;
 
 		void SetPixelPerUnit(int ppu) noexcept;
-		void SetFilterMode(FilterMode mode) noexcept;
-		void SetWrapMode(WrapMode mode) noexcept;
-
-	private:
-		virtual void GenerateTextureFromBytes(unsigned char* pixels, int w, int h, int ch, FilterMode f, WrapMode wrp);
-		virtual void LoadImageFromFile(const std::string& file, bool forceRGBA, FilterMode f, WrapMode w);
 		virtual void ChangeFilterMode(FilterMode f);
 		virtual void ChangeWrapMode(WrapMode w);
 
+	private:
+		virtual void GenerateTextureFromBytes(unsigned char* pixels, int w, int h, int ch, FilterMode f, WrapMode wrp);
 	protected:
-		std::string m_Path;
+		void LoadImageFromFile(const std::string& file, bool forceRGBA, FilterMode f, WrapMode w);
+
+	protected:
 		int m_Width;
 		int m_Height;
 		int m_ChannelCount;
