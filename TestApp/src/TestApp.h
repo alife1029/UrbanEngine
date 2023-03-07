@@ -13,6 +13,7 @@ public:
 	void Update();
 
 private:
+	UrbanEngine::Camera* m_Cam;
 	UrbanEngine::Texture2D* m_Grass;
 	float m_Rotation;
 };

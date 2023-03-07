@@ -8,6 +8,7 @@ using namespace UrbanEngine;
 
 TestApp::TestApp() : App()
 {
+	m_Cam = new Camera();
 	m_Grass = Texture2D::LoadTexture(m_Window->Gfx(), "data/textures/grass.png", 256);
 	m_Rotation = 0.0f;
 }
@@ -20,6 +21,8 @@ TestApp::~TestApp()
 void TestApp::Start()
 {
 	App::Start();
+
+	m_Cam->SetSize(1.0f);
 }
 
 void TestApp::Update()
@@ -27,10 +30,15 @@ void TestApp::Update()
 	App::Update();
 
 	m_Window->ProcessEvents();
+
+	m_Rotation += 1.4f;
+	m_Cam->SetRotation(m_Cam->Rotation() + 0.1f);
+	m_Cam->SetPosition({ 0.0f, sin(m_Rotation / 35) / 30, 0.0f });
+	m_Cam->Update();
 	
 	m_Window->Gfx()->ClearBuffer(0.0f, 0.0f, 0.0f, 1.0f);
 	
-	Renderer2D::BeginFrame(glm::mat4(1.0f));
+	Renderer2D::BeginFrame(m_Cam->ViewProjMatrix());
 
 	const float width = 0.25f;
 	const float height = 0.25f;
@@ -53,6 +61,4 @@ void TestApp::Update()
 	Renderer2D::EndFrame();
 	
 	m_Window->Gfx()->EndFrame();
-
-	m_Rotation += 1.4f;
 }
