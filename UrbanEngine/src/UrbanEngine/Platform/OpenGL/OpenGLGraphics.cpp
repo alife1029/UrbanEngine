@@ -54,7 +54,6 @@ namespace UrbanEngine
 		}
 
 		// Initial viewport
-		// TODO: Handle this via Viewport class
 		glViewport(0, 0, window->Width(), window->Height());
 
 		// Enable V-Sync

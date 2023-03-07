@@ -1,6 +1,7 @@
 #include "urbanpch.h"
 #include "Win32Window.h"
 #include "UrbanEngine/Application/AppManager.h"
+#include "UrbanEngine/Graphics/BaseViewport.h"
 #include "UrbanEngine/Platform/DirectX/D3D11Graphics.h"
 #include "UrbanEngine/Platform/OpenGL/OpenGLGraphics.h"
 
@@ -67,7 +68,7 @@ namespace UrbanEngine
 		Window(winCfg)
 	{
 		// Window style
-		constexpr DWORD windowStyle = WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU;
+		constexpr DWORD windowStyle = WS_CAPTION | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_SIZEBOX | WS_SYSMENU;
 
 		// Calculate window size based on desired client region size
 		RECT wr;
@@ -212,6 +213,15 @@ namespace UrbanEngine
 			m_IsOpen = false;
 			AppManager::QuitApplication(0);
 			break;
+
+		case WM_SIZE:	// Window resized
+			RECT wndRect;
+			GetWindowRect(hWnd, &wndRect);
+			this->m_Properties.width = wndRect.right - wndRect.left;
+			this->m_Properties.height = wndRect.bottom - wndRect.top;
+			BaseViewport::UpdateAsFillViewport(this);
+			break;
+
 		default:
 			break;
 		}
