@@ -15,7 +15,7 @@ namespace UrbanEngine
 		static int GetY();
 		static int GetWidth();
 		static int GetHeight();
-		static int GetAspectRatio();
+		static float GetAspectRatio();
 
 	private:
 		static void Update(Graphics* gfx);

@@ -80,7 +80,7 @@ namespace UrbanEngine
 	{
 		return s_Height;
 	}
-	int BaseViewport::GetAspectRatio()
+	float BaseViewport::GetAspectRatio()
 	{
 		return s_AspectRatio;
 	}
