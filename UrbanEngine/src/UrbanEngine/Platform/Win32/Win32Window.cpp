@@ -216,10 +216,10 @@ namespace UrbanEngine
 
 		case WM_SIZE:	// Window resized
 			RECT wndRect;
-			GetWindowRect(hWnd, &wndRect);
+			GetClientRect(hWnd, &wndRect);
 			this->m_Properties.width = wndRect.right - wndRect.left;
 			this->m_Properties.height = wndRect.bottom - wndRect.top;
-			BaseViewport::UpdateAsFillViewport(this);
+			BaseViewport::UpdateAsFitViewport(this, 16.0f / 9.0f);
 			break;
 
 		default:
