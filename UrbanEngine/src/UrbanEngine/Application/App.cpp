@@ -1,6 +1,7 @@
 #include "urbanpch.h"
 #include "App.h"
 #include "UrbanEngine/Graphics/Renderer2D.h"
+#include "UrbanEngine/Time.h"
 
 #ifdef URBAN_PLATFORM_WINDOWS
 #include "UrbanEngine/Platform/Win32/Win32Window.h"
@@ -36,7 +37,7 @@ namespace UrbanEngine
 	
 	void App::Update() 
 	{
-		
+		Time::Update();
 	}
 	
 	Window* App::GetWindow() const noexcept

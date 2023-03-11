@@ -1,5 +1,7 @@
 #pragma once
 
+#include "UrbanEngine/Time.h"
+
 #include "UrbanEngine/Application/App.h"
 #include "UrbanEngine/Application/AppManager.h"
 

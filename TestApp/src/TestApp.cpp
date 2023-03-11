@@ -31,9 +31,9 @@ void TestApp::Update()
 
 	m_Window->ProcessEvents();
 
-	m_Rotation += 1.4f;
-	m_Cam->SetRotation(m_Cam->Rotation() + 0.1f);
-	m_Cam->SetPosition({ 0.0f, sin(m_Rotation / 35) / 30, 0.0f });
+	m_Rotation += 63.0f * Time::Delta();
+	//m_Cam->SetRotation(m_Cam->Rotation() + 35.0f * Time::Delta());
+	m_Cam->SetPosition({ 0.0f, sinf(Time::Elapsed() * 1.5f) / 35, 0.0f });
 	m_Cam->Update();
 	
 	m_Window->Gfx()->ClearBuffer(0.0f, 0.0f, 0.0f, 1.0f);
