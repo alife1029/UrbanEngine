@@ -1,6 +1,7 @@
 #include "urbanpch.h"
 #include "Win32Window.h"
 #include "UrbanEngine/Application/AppManager.h"
+#include "UrbanEngine/Application/Input.h"
 #include "UrbanEngine/Graphics/BaseViewport.h"
 #include "UrbanEngine/Platform/DirectX/D3D11Graphics.h"
 #include "UrbanEngine/Platform/OpenGL/OpenGLGraphics.h"
@@ -184,7 +185,7 @@ namespace UrbanEngine
 			break;
 		}
 	}
-
+	
 	LRESULT Win32Window::HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
 	{
 		if (msg == WM_NCCREATE)
@@ -213,6 +214,31 @@ namespace UrbanEngine
 			m_IsOpen = false;
 			AppManager::QuitApplication(0);
 			break;
+		
+		case WM_SETFOCUS:	// Window focused
+			/*Input::s_EventWindow = this;*/
+			break;
+
+		case WM_KILLFOCUS:	// Window focus lost
+			m_Kbd.ClearState();
+			break;
+			
+		/********************** KEYBOARD MESSAGES **********************/
+		case WM_KEYDOWN:
+		case WM_SYSKEYDOWN:
+			if (!(lParam & 0x40000000) || m_Kbd.IsAutorepeatEnabled())
+				m_Kbd.OnKeyPressed(static_cast<unsigned char>(wParam));
+			break;
+
+		case WM_KEYUP:
+		case WM_SYSKEYUP:
+			m_Kbd.OnKeyReleased(static_cast<unsigned char>(wParam));
+			break;
+
+		case WM_CHAR:
+			m_Kbd.OnChar(static_cast<char>(wParam));
+			break;
+		/******************** END KEYBOARD MESSAGES ********************/
 
 		case WM_SIZE:	// Window resized
 			RECT wndRect;

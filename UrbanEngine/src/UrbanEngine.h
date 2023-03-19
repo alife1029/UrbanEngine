@@ -4,6 +4,7 @@
 
 #include "UrbanEngine/Application/App.h"
 #include "UrbanEngine/Application/AppManager.h"
+#include "UrbanEngine/Application/Input.h"
 
 #include "UrbanEngine/UrbanException.h"
 

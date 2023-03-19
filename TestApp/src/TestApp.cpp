@@ -1,4 +1,4 @@
-#include "TestApp.h"
+﻿#include "TestApp.h"
 
 #include <iostream>
 
@@ -10,7 +10,6 @@ TestApp::TestApp() : App()
 {
 	m_Cam = new Camera();
 	m_Grass = Texture2D::LoadTexture(m_Window->Gfx(), "data/textures/grass.png", 256);
-	m_Rotation = 0.0f;
 }
 
 TestApp::~TestApp()
@@ -30,10 +29,27 @@ void TestApp::Update()
 	App::Update();
 
 	m_Window->ProcessEvents();
+	
+	// Update game logic
+	{
+		if (Input::IsKeyPressed(Key::A) || Input::IsKeyPressed(Key::Left))
+			m_CamPos.x -= m_CamMovementSpeed * Time::Delta();
+		if (Input::IsKeyPressed(Key::D) || Input::IsKeyPressed(Key::Right))
+			m_CamPos.x += m_CamMovementSpeed * Time::Delta();
+		if (Input::IsKeyPressed(Key::W) || Input::IsKeyPressed(Key::Up))
+			m_CamPos.y += m_CamMovementSpeed * Time::Delta();
+		if (Input::IsKeyPressed(Key::S) || Input::IsKeyPressed(Key::Down))
+			m_CamPos.y -= m_CamMovementSpeed * Time::Delta();
 
-	m_Rotation += 63.0f * Time::Delta();
-	//m_Cam->SetRotation(m_Cam->Rotation() + 35.0f * Time::Delta());
-	m_Cam->SetPosition({ 0.0f, sinf(Time::Elapsed() * 1.5f) / 35, 0.0f });
+		if (Input::IsKeyPressed(Key::E))
+			m_CamRotation -= m_CamRotationSpeed * Time::Delta();
+		if (Input::IsKeyPressed(Key::Q))
+			m_CamRotation += m_CamRotationSpeed * Time::Delta();
+
+		m_Cam->SetPosition({ m_CamPos, 0.0f });
+		m_Cam->SetRotation(m_CamRotation);
+	}
+	
 	m_Cam->Update();
 	
 	m_Window->Gfx()->ClearBuffer(0.0f, 0.0f, 0.0f, 1.0f);
@@ -56,7 +72,7 @@ void TestApp::Update()
 		}
 	}
 
-	Renderer2D::DrawQuad(m_Grass, { 0.0f, 0.0f }, m_Rotation);
+	Renderer2D::DrawQuad(m_Grass, { 0.0f, 0.0f }, m_Rotation += Time::Delta() * 15.0f);
 
 	Renderer2D::EndFrame();
 	

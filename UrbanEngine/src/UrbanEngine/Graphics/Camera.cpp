@@ -19,9 +19,9 @@ namespace UrbanEngine
 		glm::mat4 view = glm::translate(
 				glm::rotate(
 					glm::mat4(1.0f), 
-					glm::radians(m_Rotation), 
+					-glm::radians(m_Rotation), 
 					{ 0.0f, 0.0f, 1.0f }), 
-				m_Position);
+				-m_Position);
 
 		float left = m_Size * BaseViewport::GetAspectRatio() / -2.0f;
 		float top = m_Size / 2.0f;

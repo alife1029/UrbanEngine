@@ -1,12 +1,14 @@
 #pragma once
 
 #include "WindowConfig.h"
+#include "Keyboard.h"
 #include "UrbanEngine/Graphics/Graphics.h"
 
 namespace UrbanEngine
 {
 	class Window
 	{
+		friend class Input;
 	public:
 		Window(const WindowConfig& winCfg);
 		virtual ~Window();
@@ -27,11 +29,11 @@ namespace UrbanEngine
 		virtual void ProcessEvents();
 		virtual void CreateGraphicContext(Graphics::API api);
 
-		// TODO: Think about this
 		Graphics* Gfx() const noexcept;
 	protected:
 		WindowConfig m_Properties;
 		bool m_IsOpen;
+		Keyboard m_Kbd;
 		Graphics* m_Graphics;
 	};
 }

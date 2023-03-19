@@ -1,5 +1,6 @@
 #include "urbanpch.h"
 #include "App.h"
+#include "Input.h"
 #include "UrbanEngine/Graphics/Renderer2D.h"
 #include "UrbanEngine/Time.h"
 
@@ -15,6 +16,7 @@ namespace UrbanEngine
 #ifdef URBAN_PLATFORM_WINDOWS
 		WindowConfig wndCfg;
 		m_Window = new Win32Window(wndCfg);
+		Input::SetupEventWindow(m_Window);
 		m_Window->CreateGraphicContext(UrbanEngine::Graphics::API::GL460);
 		
 		// Initialize batch renderer
