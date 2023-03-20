@@ -1,7 +1,7 @@
 #pragma once
 
 #include "WindowConfig.h"
-#include "Keyboard.h"
+#include "UrbanEngine/Input/Keyboard.h"
 #include "UrbanEngine/Graphics/Graphics.h"
 
 namespace UrbanEngine

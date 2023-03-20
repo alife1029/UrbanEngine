@@ -2,7 +2,7 @@
 #include "Win32Window.h"
 #include "Win32Keyboard.h"
 #include "UrbanEngine/Application/AppManager.h"
-#include "UrbanEngine/Application/Input.h"
+#include "UrbanEngine/Input/Input.h"
 #include "UrbanEngine/Graphics/BaseViewport.h"
 #include "UrbanEngine/Platform/DirectX/D3D11Graphics.h"
 #include "UrbanEngine/Platform/OpenGL/OpenGLGraphics.h"

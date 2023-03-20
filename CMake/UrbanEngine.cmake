@@ -22,6 +22,9 @@ file(GLOB URBAN_SOURCES
             ${URBAN_DIR}/src/UrbanEngine/Application/**.cpp
             ${URBAN_DIR}/src/UrbanEngine/Application/**.hpp
             ${URBAN_DIR}/src/UrbanEngine/Application/**.h
+            ${URBAN_DIR}/src/UrbanEngine/Input/**.cpp
+            ${URBAN_DIR}/src/UrbanEngine/Input/**.hpp
+            ${URBAN_DIR}/src/UrbanEngine/Input/**.h
             ${URBAN_DIR}/src/UrbanEngine/Graphics/**.cpp
             ${URBAN_DIR}/src/UrbanEngine/Graphics/**.hpp
             ${URBAN_DIR}/src/UrbanEngine/Graphics/**.h
