@@ -1,6 +1,5 @@
 #include "urbanpch.h"
 #include "AppManager.h"
-#include <assert.h>
 
 namespace UrbanEngine
 {

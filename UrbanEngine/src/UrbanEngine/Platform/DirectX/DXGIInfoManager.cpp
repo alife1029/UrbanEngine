@@ -4,8 +4,6 @@
 #include "D3D11Graphics.h"
 #include "D3D11GraphicsThrowMacros.h"
 
-#include <memory>
-
 #pragma comment(lib, "dxguid.lib")
 
 namespace UrbanEngine

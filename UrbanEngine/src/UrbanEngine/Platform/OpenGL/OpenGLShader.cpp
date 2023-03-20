@@ -1,8 +1,5 @@
+#include "urbanpch.h"
 #include "OpenGLShader.h"
-
-#include <fstream>
-#include <sstream>
-#include <regex>
 
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>

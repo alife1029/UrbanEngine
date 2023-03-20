@@ -1,10 +1,9 @@
+#include "urbanpch.h"
 #include "OpenGLRenderer2D.h"
 #include "OpenGLShader.h"
 #include "OpenGLGraphics.h"
 
 #include <glad/glad.h>
-
-#include <cstdint>
 
 static constexpr size_t QUAD_PER_BATCH = 1000;
 static int MAX_TEXTURES = 0;
