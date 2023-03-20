@@ -1,5 +1,6 @@
 #include "urbanpch.h"
 #include "Win32Window.h"
+#include "Win32Keyboard.h"
 #include "UrbanEngine/Application/AppManager.h"
 #include "UrbanEngine/Application/Input.h"
 #include "UrbanEngine/Graphics/BaseViewport.h"
@@ -99,10 +100,15 @@ namespace UrbanEngine
 		{
 			throw URBAN_WIN32WND_LASTEXCEPT();
 		}
+		
+
+		// Create keyboard
+		m_Kbd = new Win32Keyboard();
 	}
 	
 	Win32Window::~Win32Window()
 	{
+		delete m_Kbd;
 		delete m_Graphics;
 		DestroyWindow(hWnd);
 	}
@@ -208,6 +214,8 @@ namespace UrbanEngine
 
 	LRESULT Win32Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
 	{
+		Win32Keyboard* kbd = reinterpret_cast<Win32Keyboard*>(m_Kbd);
+
 		switch (msg)
 		{
 		case WM_CLOSE:
@@ -220,23 +228,23 @@ namespace UrbanEngine
 			break;
 
 		case WM_KILLFOCUS:	// Window focus lost
-			m_Kbd.ClearState();
+			kbd->ClearState();
 			break;
 			
 		/********************** KEYBOARD MESSAGES **********************/
 		case WM_KEYDOWN:
 		case WM_SYSKEYDOWN:
-			if (!(lParam & 0x40000000) || m_Kbd.IsAutorepeatEnabled())
-				m_Kbd.OnKeyPressed(static_cast<unsigned char>(wParam));
+			if (!(lParam & 0x40000000) || kbd->IsAutorepeatEnabled())
+				kbd->OnKeyPressed(static_cast<unsigned char>(wParam));
 			break;
 
 		case WM_KEYUP:
 		case WM_SYSKEYUP:
-			m_Kbd.OnKeyReleased(static_cast<unsigned char>(wParam));
+			kbd->OnKeyReleased(static_cast<unsigned char>(wParam));
 			break;
 
 		case WM_CHAR:
-			m_Kbd.OnChar(static_cast<char>(wParam));
+			kbd->OnChar(static_cast<char>(wParam));
 			break;
 		/******************** END KEYBOARD MESSAGES ********************/
 

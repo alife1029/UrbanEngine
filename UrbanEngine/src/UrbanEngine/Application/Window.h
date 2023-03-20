@@ -33,7 +33,7 @@ namespace UrbanEngine
 	protected:
 		WindowConfig m_Properties;
 		bool m_IsOpen;
-		Keyboard m_Kbd;
+		Keyboard* m_Kbd;
 		Graphics* m_Graphics;
 	};
 }

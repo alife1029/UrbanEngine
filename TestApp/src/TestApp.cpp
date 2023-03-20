@@ -48,6 +48,12 @@ void TestApp::Update()
 
 		m_Cam->SetPosition({ m_CamPos, 0.0f });
 		m_Cam->SetRotation(m_CamRotation);
+
+		std::vector<unsigned char> pressedKeys = Input::GetPressedKeys();
+		for (unsigned char key : pressedKeys)
+		{
+			std::cout << std::hex << "0x" << +key << std::endl;
+		}
 	}
 	
 	m_Cam->Update();

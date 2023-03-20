@@ -13,6 +13,7 @@ namespace UrbanEngine
 	public:
 		static bool IsKeyPressed(Key key) noexcept;
 		static bool IsKeyPressed(unsigned char key) noexcept;
+		static std::vector<unsigned char> GetPressedKeys() noexcept;
 	private:
 		static void SetupEventWindow(Window* eventWnd) noexcept;
 	};

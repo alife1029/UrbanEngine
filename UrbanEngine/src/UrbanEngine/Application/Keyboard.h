@@ -8,7 +8,6 @@ namespace UrbanEngine
 	class Keyboard
 	{
 		friend class Window;
-		friend class Win32Window; // TODO: Try to remove this by inheritance
 	public:
 		class Event
 		{
@@ -45,6 +44,12 @@ namespace UrbanEngine
 		void DisableAutorepeat() noexcept;
 		bool IsAutorepeatEnabled() const noexcept;
 
+	protected:
+		void OnKeyPressed(unsigned char keycode) noexcept;
+		void OnKeyReleased(unsigned char keycode) noexcept;
+		void OnChar(char character) noexcept;
+		void ClearState() noexcept;
+
 	private:
 		Event ReadKey() noexcept;
 		bool IsEmpty() const noexcept;
@@ -56,18 +61,16 @@ namespace UrbanEngine
 		void Flush() noexcept;
 
 	private:
-		void OnKeyPressed(unsigned char keycode) noexcept;
-		void OnKeyReleased(unsigned char keycode) noexcept;
-		void OnChar(char character) noexcept;
-		void ClearState() noexcept;
 		template<typename T>
 		inline static void TrimBuffer(std::queue<T>& buffer) noexcept;
 	
+	public:
+		static constexpr unsigned int KeyCount = 256u;
+		
 	private:
-		static constexpr unsigned int m_Keys = 256u;
 		static constexpr unsigned int m_BufferSize = 16u;
 		bool m_AutoRepeatEnabled = false;
-		std::bitset<m_Keys> m_Keystates;
+		std::bitset<KeyCount> m_Keystates;
 		std::queue<Event> m_Keybuffer;
 		std::queue<char> m_Charbuffer;
 	};
